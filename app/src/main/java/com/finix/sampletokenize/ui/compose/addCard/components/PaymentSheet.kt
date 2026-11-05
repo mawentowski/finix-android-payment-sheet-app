@@ -6,253 +6,202 @@ import androidx.compose.runtime.Composable
 import com.finix.finixpaymentsheet.ui.viewModel.paymentSheet.*
 import com.finix.sampletokenize.ui.compose.addCard.AddCardViewModel
 
-
-/**
- * These are all the payment sheet variations available
- *
- *  Required: onDismiss, onNegativeClick, onPositiveClick
- *  all else is optional
- *
- *  SEE viewModel.state.paymentSheetColors for color defaults
- *  SEE viewModel.state.paymentSheetResources for resource defaults
- */
+// Fixed amount/currency for the demo; a real integration would surface these
+// from the cart. Unit is the smallest currency unit (cents for USD).
+private const val DEMO_AMOUNT_CENTS = 100L
+private const val DEMO_CURRENCY = "USD"
 
 @Composable
 fun ShowCompletePaymentSheetOutlined(viewModel: AddCardViewModel, context: Context) {
-
     CompletePaymentSheetOutlined(
-        // add any methods that would happen once the sheet is dismissed by a side swipe, or leave empty if you don't want anything to happen
-        onDismiss = {
+        configuration = viewModel.state.paymentSheetConfiguration,
+        amount = DEMO_AMOUNT_CENTS,
+        currency = DEMO_CURRENCY,
+        onCancel = {
             viewModel.setShowCompletePaymentSheetOutlined(false)
             viewModel.setShowFinixPaymentSheetSelection(show = true)
-            Toast.makeText(context, "onDismiss!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "onCancel!", Toast.LENGTH_SHORT).show()
         },
-        // add any methods that would happen when the user clicks the cancel button, or leave empty if you don't want anything to happen
-        onNegativeClick = {
+        onSuccess = { response ->
             viewModel.setShowCompletePaymentSheetOutlined(false)
             viewModel.setShowFinixPaymentSheetSelection(show = true)
-            Toast.makeText(context, "onNegativeClick", Toast.LENGTH_SHORT).show()
-
+            Toast.makeText(context, "onSuccess: ${response.tokenizedResponse.id}", Toast.LENGTH_SHORT).show()
+            viewModel.setTokenResponse(response.tokenizedResponse.toString())
         },
-        // add any methods that would happen when the user clicks on the tokenize button and a token response is returned; you should save this token for your own use
-        onPositiveClick = { Token ->
+        onFailure = { error ->
             viewModel.setShowCompletePaymentSheetOutlined(false)
             viewModel.setShowFinixPaymentSheetSelection(show = true)
-            Toast.makeText(context, "onPositiveClick: Response: $Token", Toast.LENGTH_SHORT).show()
-            viewModel.setTokenResponse(Token.toString())
-
+            Toast.makeText(context, "onFailure: $error", Toast.LENGTH_LONG).show()
         },
-        applicationId = "APjMB6owJ7542dehJ6hCojzR", // change to your own application ID, otherwise sandbox id will be used
-        isSandbox = true, // change to false for live
-        paymentSheetColors = viewModel.state.paymentSheetColors, // optional
-        paymentSheetResources = viewModel.state.paymentSheetResources, // optional
+        paymentSheetColors = viewModel.state.paymentSheetColors,
+        paymentSheetResources = viewModel.state.paymentSheetResources,
     )
-
 }
 
 @Composable
 fun ShowPartialPaymentSheetOutlined(viewModel: AddCardViewModel, context: Context) {
     PartialPaymentSheetOutlined(
-        // add any methods that would happen once the sheet is dismissed by a side swipe, or leave empty if you don't want anything to happen
-        onDismiss = {
+        configuration = viewModel.state.paymentSheetConfiguration,
+        amount = DEMO_AMOUNT_CENTS,
+        currency = DEMO_CURRENCY,
+        onCancel = {
             viewModel.setShowPartialPaymentSheetOutlined(false)
-            Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "onCancel", Toast.LENGTH_SHORT).show()
         },
-        // add any methods that would happen when the user clicks the cancel button, or leave empty if you don't want anything to happen
-        onNegativeClick = {
+        onSuccess = { response ->
             viewModel.setShowPartialPaymentSheetOutlined(false)
-            Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT).show()
-
+            Toast.makeText(context, "onSuccess: ${response.tokenizedResponse.id}", Toast.LENGTH_SHORT).show()
+            viewModel.setTokenResponse(response.tokenizedResponse.toString())
         },
-        // add any methods that would happen when the user clicks on the tokenize button and a token response is returned; you should save this token for your own use
-        onPositiveClick = { Token ->
+        onFailure = { error ->
             viewModel.setShowPartialPaymentSheetOutlined(false)
-            Toast.makeText(context, "Tokenize Response: $Token", Toast.LENGTH_SHORT).show()
-            viewModel.setTokenResponse(Token.toString())
-
+            Toast.makeText(context, "onFailure: $error", Toast.LENGTH_LONG).show()
         },
-        applicationId = "APjMB6owJ7542dehJ6hCojzR", // change to your own application ID, otherwise sandbox id will be used
-        isSandbox = true, // change to false for live
-        paymentSheetColors = viewModel.state.paymentSheetColors, // optional
-        paymentSheetResources = viewModel.state.paymentSheetResources, // optional
+        paymentSheetColors = viewModel.state.paymentSheetColors,
+        paymentSheetResources = viewModel.state.paymentSheetResources,
     )
-
 }
 
 @Composable
 fun ShowBasicPaymentSheetOutlined(viewModel: AddCardViewModel, context: Context) {
     BasicPaymentSheetOutlined(
-        // add any methods that would happen once the sheet is dismissed by a side swipe, or leave empty if you don't want anything to happen
-        onDismiss = {
+        configuration = viewModel.state.paymentSheetConfiguration,
+        amount = DEMO_AMOUNT_CENTS,
+        currency = DEMO_CURRENCY,
+        onCancel = {
             viewModel.setShowBasicPaymentSheetOutlined(false)
-            Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "onCancel", Toast.LENGTH_SHORT).show()
         },
-        // add any methods that would happen when the user clicks the cancel button, or leave empty if you don't want anything to happen
-        onNegativeClick = {
+        onSuccess = { response ->
             viewModel.setShowBasicPaymentSheetOutlined(false)
-            Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT).show()
-
+            Toast.makeText(context, "onSuccess: ${response.tokenizedResponse.id}", Toast.LENGTH_SHORT).show()
+            viewModel.setTokenResponse(response.tokenizedResponse.toString())
         },
-        // add any methods that would happen when the user clicks on the tokenize button and a token response is returned; you should save this token for your own use
-        onPositiveClick = { Token ->
+        onFailure = { error ->
             viewModel.setShowBasicPaymentSheetOutlined(false)
-            Toast.makeText(context, "Tokenize Response: $Token", Toast.LENGTH_SHORT).show()
-            viewModel.setTokenResponse(Token.toString())
-
+            Toast.makeText(context, "onFailure: $error", Toast.LENGTH_LONG).show()
         },
-
-        applicationId = "APjMB6owJ7542dehJ6hCojzR", // change to your own application ID, otherwise sandbox id will be used
-        isSandbox = true, // change to false for live
-        paymentSheetColors = viewModel.state.paymentSheetColors, // optional
-        paymentSheetResources = viewModel.state.paymentSheetResources, // optional
+        paymentSheetColors = viewModel.state.paymentSheetColors,
+        paymentSheetResources = viewModel.state.paymentSheetResources,
     )
-
 }
 
 @Composable
 fun ShowMinimalPaymentSheetOutlined(viewModel: AddCardViewModel, context: Context) {
     MinimalPaymentSheetOutlined(
-        // add any methods that would happen once the sheet is dismissed by a side swipe, or leave empty if you don't want anything to happen
-        onDismiss = {
+        configuration = viewModel.state.paymentSheetConfiguration,
+        amount = DEMO_AMOUNT_CENTS,
+        currency = DEMO_CURRENCY,
+        onCancel = {
             viewModel.setShowMinimalPaymentSheetOutlined(false)
-            Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "onCancel", Toast.LENGTH_SHORT).show()
         },
-        // add any methods that would happen when the user clicks the cancel button, or leave empty if you don't want anything to happen
-        onNegativeClick = {
+        onSuccess = { response ->
             viewModel.setShowMinimalPaymentSheetOutlined(false)
-            Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT).show()
-
+            Toast.makeText(context, "onSuccess: ${response.tokenizedResponse.id}", Toast.LENGTH_SHORT).show()
+            viewModel.setTokenResponse(response.tokenizedResponse.toString())
         },
-        // add any methods that would happen when the user clicks on the tokenize button and a token response is returned; you should save this token for your own use
-        onPositiveClick = { Token ->
+        onFailure = { error ->
             viewModel.setShowMinimalPaymentSheetOutlined(false)
-            Toast.makeText(context, "Tokenize Response: $Token", Toast.LENGTH_SHORT).show()
-            viewModel.setTokenResponse(Token.toString())
-
+            Toast.makeText(context, "onFailure: $error", Toast.LENGTH_LONG).show()
         },
-
-        applicationId = "APjMB6owJ7542dehJ6hCojzR", // change to your own application ID, otherwise sandbox id will be used
-        isSandbox = true, // change to false for live
-        paymentSheetColors = viewModel.state.paymentSheetColors, // optional
-        paymentSheetResources = viewModel.state.paymentSheetResources, // optional
+        paymentSheetColors = viewModel.state.paymentSheetColors,
+        paymentSheetResources = viewModel.state.paymentSheetResources,
     )
-
 }
 
 @Composable
 fun ShowCompletePaymentSheet(viewModel: AddCardViewModel, context: Context) {
     CompletePaymentSheet(
-        // add any methods that would happen once the sheet is dismissed by a side swipe, or leave empty if you don't want anything to happen
-        onDismiss = {
+        configuration = viewModel.state.paymentSheetConfiguration,
+        amount = DEMO_AMOUNT_CENTS,
+        currency = DEMO_CURRENCY,
+        onCancel = {
             viewModel.setShowCompletePaymentSheet(false)
-            Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "onCancel", Toast.LENGTH_SHORT).show()
         },
-        // add any methods that would happen when the user clicks the cancel button, or leave empty if you don't want anything to happen
-        onNegativeClick = {
+        onSuccess = { response ->
             viewModel.setShowCompletePaymentSheet(false)
-            Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT).show()
-
+            Toast.makeText(context, "onSuccess: ${response.tokenizedResponse.id}", Toast.LENGTH_SHORT).show()
+            viewModel.setTokenResponse(response.tokenizedResponse.toString())
         },
-        // add any methods that would happen when the user clicks on the tokenize button and a token response is returned; you should save this token for your own use
-        onPositiveClick = { Token ->
+        onFailure = { error ->
             viewModel.setShowCompletePaymentSheet(false)
-            Toast.makeText(context, "Tokenize Response: $Token", Toast.LENGTH_SHORT).show()
-            viewModel.setTokenResponse(Token.toString())
-
+            Toast.makeText(context, "onFailure: $error", Toast.LENGTH_LONG).show()
         },
-
-        applicationId = "APjMB6owJ7542dehJ6hCojzR", // change to your own application ID, otherwise sandbox id will be used
-        isSandbox = true, // change to false for live
-        paymentSheetColors = viewModel.state.paymentSheetColors, // optional
-        paymentSheetResources = viewModel.state.paymentSheetResources, // optional
+        paymentSheetColors = viewModel.state.paymentSheetColors,
+        paymentSheetResources = viewModel.state.paymentSheetResources,
     )
-
 }
 
 @Composable
 fun ShowPartialPaymentSheet(viewModel: AddCardViewModel, context: Context) {
     PartialPaymentSheet(
-        // add any methods that would happen once the sheet is dismissed by a side swipe, or leave empty if you don't want anything to happen
-        onDismiss = {
+        configuration = viewModel.state.paymentSheetConfiguration,
+        amount = DEMO_AMOUNT_CENTS,
+        currency = DEMO_CURRENCY,
+        onCancel = {
             viewModel.setShowPartialPaymentSheet(false)
-            Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "onCancel", Toast.LENGTH_SHORT).show()
         },
-        // add any methods that would happen when the user clicks the cancel button, or leave empty if you don't want anything to happen
-        onNegativeClick = {
+        onSuccess = { response ->
             viewModel.setShowPartialPaymentSheet(false)
-            Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT).show()
-
+            Toast.makeText(context, "onSuccess: ${response.tokenizedResponse.id}", Toast.LENGTH_SHORT).show()
+            viewModel.setTokenResponse(response.tokenizedResponse.toString())
         },
-        // add any methods that would happen when the user clicks on the tokenize button and a token response is returned; you should save this token for your own use
-        onPositiveClick = { Token ->
+        onFailure = { error ->
             viewModel.setShowPartialPaymentSheet(false)
-            Toast.makeText(context, "Tokenize Response: $Token", Toast.LENGTH_SHORT).show()
-            viewModel.setTokenResponse(Token.toString())
-
+            Toast.makeText(context, "onFailure: $error", Toast.LENGTH_LONG).show()
         },
-        applicationId = "APjMB6owJ7542dehJ6hCojzR", // change to your own application ID, otherwise sandbox id will be used
-        isSandbox = true, // change to false for live
-        paymentSheetColors = viewModel.state.paymentSheetColors, // optional
-        paymentSheetResources = viewModel.state.paymentSheetResources, // optional
+        paymentSheetColors = viewModel.state.paymentSheetColors,
+        paymentSheetResources = viewModel.state.paymentSheetResources,
     )
-
 }
 
 @Composable
 fun ShowBasicPaymentSheet(viewModel: AddCardViewModel, context: Context) {
     BasicPaymentSheet(
-        // add any methods that would happen once the sheet is dismissed by a side swipe, or leave empty if you don't want anything to happen
-        onDismiss = {
+        configuration = viewModel.state.paymentSheetConfiguration,
+        amount = DEMO_AMOUNT_CENTS,
+        currency = DEMO_CURRENCY,
+        onCancel = {
             viewModel.setShowBasicPaymentSheet(false)
-            Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "onCancel", Toast.LENGTH_SHORT).show()
         },
-        // add any methods that would happen when the user clicks the cancel button, or leave empty if you don't want anything to happen
-        onNegativeClick = {
+        onSuccess = { response ->
             viewModel.setShowBasicPaymentSheet(false)
-            Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT).show()
-
+            Toast.makeText(context, "onSuccess: ${response.tokenizedResponse.id}", Toast.LENGTH_SHORT).show()
+            viewModel.setTokenResponse(response.tokenizedResponse.toString())
         },
-        // add any methods that would happen when the user clicks on the tokenize button and a token response is returned; you should save this token for your own use
-        onPositiveClick = { Token ->
+        onFailure = { error ->
             viewModel.setShowBasicPaymentSheet(false)
-            Toast.makeText(context, "Tokenize Response: $Token", Toast.LENGTH_SHORT).show()
-            viewModel.setTokenResponse(Token.toString())
-
+            Toast.makeText(context, "onFailure: $error", Toast.LENGTH_LONG).show()
         },
-        applicationId = "APjMB6owJ7542dehJ6hCojzR", // change to your own application ID, otherwise sandbox id will be used
-        isSandbox = true, // change to false for live
-        paymentSheetColors = viewModel.state.paymentSheetColors, // optional
-        paymentSheetResources = viewModel.state.paymentSheetResources, // optional
+        paymentSheetColors = viewModel.state.paymentSheetColors,
+        paymentSheetResources = viewModel.state.paymentSheetResources,
     )
-
 }
 
 @Composable
 fun ShowMinimalPaymentSheet(viewModel: AddCardViewModel, context: Context) {
     InternationalPaymentSheet(
-        // add any methods that would happen once the sheet is dismissed by a side swipe, or leave empty if you don't want anything to happen
-        onDismiss = {
+        configuration = viewModel.state.paymentSheetConfiguration,
+        amount = DEMO_AMOUNT_CENTS,
+        currency = DEMO_CURRENCY,
+        onCancel = {
             viewModel.setShowMinimalPaymentSheet(false)
-            Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "onCancel", Toast.LENGTH_SHORT).show()
         },
-        // add any methods that would happen when the user clicks the cancel button, or leave empty if you don't want anything to happen
-        onNegativeClick = {
+        onSuccess = { response ->
             viewModel.setShowMinimalPaymentSheet(false)
-            Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT).show()
-
+            Toast.makeText(context, "onSuccess: ${response.tokenizedResponse.id}", Toast.LENGTH_SHORT).show()
+            viewModel.setTokenResponse(response.tokenizedResponse.toString())
         },
-        // add any methods that would happen when the user clicks on the tokenize button and a token response is returned; you should save this token for your own use
-        onPositiveClick = { Token ->
+        onFailure = { error ->
             viewModel.setShowMinimalPaymentSheet(false)
-            Toast.makeText(context, "Tokenize Response: $Token", Toast.LENGTH_SHORT).show()
-            viewModel.setTokenResponse(Token.toString())
-
+            Toast.makeText(context, "onFailure: $error", Toast.LENGTH_LONG).show()
         },
-        applicationId = "APjMB6owJ7542dehJ6hCojzR", // change to your own application ID, otherwise sandbox id will be used
-        isSandbox = false, // change to false for live
-        paymentSheetColors = viewModel.state.paymentSheetColors, // optional
-        paymentSheetResources = viewModel.state.paymentSheetResources, // optional
+        paymentSheetColors = viewModel.state.paymentSheetColors,
+        paymentSheetResources = viewModel.state.paymentSheetResources,
     )
-
 }
-
